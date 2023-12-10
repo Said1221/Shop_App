@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/category_datails.dart';
 import 'package:shop_app/category_products.dart';
+import 'package:shop_app/constant/component.dart';
 import 'package:shop_app/constant/dio_helper.dart';
 import 'package:shop_app/constant/shared_pref.dart';
 import 'package:shop_app/cubit.dart';
@@ -15,8 +16,9 @@ import 'package:shop_app/state.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await CacheHelper.init();
-  print(CacheHelper.getData(key: 'token'));
   await dioHelper.init();
+
+
   runApp(const MyApp());
 }
 
@@ -33,7 +35,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             theme: ThemeData(
             ),
-            home: onBoarding(),
+            home: home_layout(),
             debugShowCheckedModeBanner: false,
           );
           },

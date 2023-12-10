@@ -44,7 +44,6 @@ class AppGetCategoryErrorState extends AppState{
   }
 }
 
-
 class AppGetCategoryProductsSuccessState extends AppState{
 
   AppGetCategoryProductsSuccessState(){
@@ -73,7 +72,6 @@ class AppGetProductsErrorState extends AppState{
   }
 }
 
-
 class AppPostFavoritesLoadingSuccessState extends AppState{
 
   AppPostFavoritesLoadingSuccessState(){
@@ -81,7 +79,6 @@ class AppPostFavoritesLoadingSuccessState extends AppState{
   }
 
 }
-
 
 class AppPostFavoritesSuccessState extends AppState{
 
@@ -98,25 +95,13 @@ class AppPostFavoritesErrorState extends AppState{
   }
 }
 
+class AppLoadingFavoritesSuccessState extends AppState{
 
-class AppDeleteFavoritesSuccessState extends AppState{
-
-  AppDeleteFavoritesSuccessState(){
+  AppLoadingFavoritesSuccessState(){
     print('AppDeleteFavoritesSuccessState');
   }
 
 }
-
-class AppDeleteFavoritesErrorState extends AppState{
-
-  AppDeleteFavoritesErrorState(){
-    print('AppDeleteFavoritesErrorState');
-  }
-}
-
-
-
-
 
 class AppGetFavoritesSuccessState extends AppState{
 
@@ -147,6 +132,13 @@ class AppPostCartErrorState extends AppState {
   }
 }
 
+class AppLoadingCartSuccessState extends AppState {
+
+  AppLoadingCartSuccessState() {
+    print('AppLoadingCartSuccessState');
+  }
+}
+
 class AppGetCartSuccessState extends AppState {
 
   AppGetCartSuccessState() {
@@ -161,14 +153,13 @@ class AppGetCartErrorState extends AppState {
   }
 }
 
-  class AppPostSearchSuccessState extends AppState {
+class AppPostSearchSuccessState extends AppState {
 
     AppPostSearchSuccessState() {
       print('AppPostSearchSuccessState');
     }
 
   }
-
 
   class AppPostSearchErrorState extends AppState {
 
@@ -179,6 +170,14 @@ class AppGetCartErrorState extends AppState {
 
 }
 
+class AppLogoutLoadingState extends AppState {
+
+  AppLogoutLoadingState() {
+    print('AppLogoutLoadingState');
+  }
+
+
+}
 
 class AppLogoutSuccessState extends AppState {
 
@@ -189,8 +188,6 @@ class AppLogoutSuccessState extends AppState {
 
 }
 
-
-
 class AppLogoutErrorState extends AppState {
 
   AppLogoutErrorState() {
@@ -199,3 +196,5 @@ class AppLogoutErrorState extends AppState {
 
 
 }
+
+

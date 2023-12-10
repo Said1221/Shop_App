@@ -6,9 +6,14 @@ import 'package:shop_app/constant/component.dart';
 import 'package:shop_app/cubit.dart';
 import 'package:shop_app/state.dart';
 
-class cart_screen extends StatelessWidget {
+class cart_screen extends StatefulWidget {
 
 
+  @override
+  State<cart_screen> createState() => _cart_screenState();
+}
+
+class _cart_screenState extends State<cart_screen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -25,17 +30,51 @@ class cart_screen extends StatelessWidget {
               title: Text('Cart' , style: TextStyle(color: Colors.black)),
             ),
             body: ConditionalBuilder(
-                condition: state is AppGetCartSuccessState,
+                condition: state is! AppLoadingCartSuccessState && state is AppGetCartSuccessState,
                 builder: (context)=>ConditionalBuilder(
                   condition: cubit.carts.isNotEmpty,
                   builder: (context)=>ListView.separated(
-                    itemBuilder: (context , index)=>buildCart(cubit.carts[index]),
+                    itemBuilder: (context , index){
+                      return Dismissible(
+                          key: GlobalKey<FormState>(),
+                          child: buildCart(cubit.carts[index]),
+                        onDismissed: (direction){
+                          [cubit.carts[index]].removeAt(index);
+                          setState((){
+                            cubit.postCart(cubit.carts[index]['product']['id']);
+                          });
+                        },
+                          background: Container(
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    colors: [
+                                      Colors.red,
+                                      Colors.red[400],
+                                      Colors.red[200],
+                                    ]
+                                )
+                            ),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text('Delete' , style: TextStyle(fontSize: 30 , color: Colors.white , fontStyle: FontStyle.italic),),
+                                  Icon(Icons.delete , color: Colors.white,),
+                                ],
+                              ),
+                            ),
+                          )
+
+                      );
+                    },
                     separatorBuilder: (context , index)=>myDivider(),
                     itemCount: cubit.carts.length,
                   ),
                   fallback: (context)=>Center(child: Text('Your Cart is Empty!' , style: TextStyle(fontSize: 20),)),
                 ),
               fallback: (context)=>Center(child: CircularProgressIndicator(color: Colors.teal,)),
+
+
 
             ),
           );
@@ -77,9 +116,8 @@ class cart_screen extends StatelessWidget {
                 ),
 
                 IconButton(onPressed: (){
-                  AppCubit().postCart(list['product']['id']);
                 },
-                    icon:Icon(Icons.delete , color: Colors.red,)
+                    icon:Icon(Icons.swap_horiz , color: Colors.red,)
                 ),
               ],
             ),
@@ -88,5 +126,4 @@ class cart_screen extends StatelessWidget {
       ),
     ),
   );
-
 }

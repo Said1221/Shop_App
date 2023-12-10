@@ -1,6 +1,8 @@
 
+import 'package:conditional_builder/conditional_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shop_app/constant/component.dart';
 import 'package:shop_app/constant/my_clipper.dart';
 import 'package:shop_app/constant/shared_pref.dart';
@@ -13,6 +15,8 @@ import 'package:shop_app/onBoarding.dart';
 import 'package:shop_app/state.dart';
 
 class setting_screen extends StatelessWidget {
+
+  String token;
 
   @override
   Widget build(BuildContext context) {
@@ -124,17 +128,34 @@ class setting_screen extends StatelessWidget {
 
                       width: double.infinity,
                       child: MaterialButton(onPressed: (){
+                        token = CacheHelper.getData(key: 'token');
+                        print(token);
                         showDialog(context: context,
                             builder: (BuildContext context)=>AlertDialog(
                               title: Text('Are you sure you want logout!!' , style: TextStyle(fontWeight: FontWeight.bold),),
                               content: Text('You will be returned to boarding screen' , style: TextStyle(color: Colors.grey),),
                               actions: [
-                                TextButton(onPressed: (){
-                                  cubit.logOut(CacheHelper.getData(key: 'token'));
-                                    navigateTo(context, onBoarding());
-                                },
-                                  child: Text('ok'),
+                                ConditionalBuilder(
+                                    condition: state is! AppLogoutLoadingState,
+                                    builder: (context)=>TextButton(onPressed: ()async{
+                                      cubit.logOut(context);
+                                        Fluttertoast.showToast(
+                                          msg: 'Logout done successfully',
+                                          timeInSecForIosWeb: 3,
+                                          gravity: ToastGravity.BOTTOM,
+                                          textColor: Colors.white,
+                                          toastLength: Toast.LENGTH_LONG,
+                                          fontSize: 16,
+                                          backgroundColor: Colors.red,
+                                        );
+                                        navigateTo(context, onBoarding());
+                                    },
+                                      child: Text('ok'),
+                                    ),
+                                  fallback: (context)=>Center(child: CircularProgressIndicator()),
                                 ),
+
+
                                 TextButton(onPressed: (){
                                   Navigator.pop(context);
                                 },

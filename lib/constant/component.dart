@@ -8,6 +8,7 @@ Map<int , bool>favorite = {};
 Map<int , bool>cart = {};
 int num = 1;
 
+
 Widget myDivider() => Padding(
   padding: const EdgeInsetsDirectional.all(
     10

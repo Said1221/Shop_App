@@ -142,7 +142,7 @@ class _home_screenState extends State<home_screen> {
                                         ],
                                       ),
                                       SizedBox(
-                                        width:14,
+                                        width:5,
                                       ),
 
                                       IconButton(onPressed: (){

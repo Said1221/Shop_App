@@ -4,11 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/category.dart';
 import 'package:shop_app/constant/component.dart';
 import 'package:shop_app/constant/dio_helper.dart';
+import 'package:shop_app/constant/shared_pref.dart';
 import 'package:shop_app/cubit.dart';
 import 'package:shop_app/favorite.dart';
 import 'package:shop_app/home.dart';
 import 'package:shop_app/login/state.dart';
-import 'package:shop_app/models/bannerModel.dart';
+import 'package:shop_app/onBoarding.dart';
 import 'package:shop_app/setting.dart';
 import 'package:shop_app/state.dart';
 
@@ -17,7 +18,7 @@ class AppCubit extends Cubit<AppState>{
 
   static AppCubit get(context)=>BlocProvider.of(context);
 
-  bannerModel bannermodel;
+
 
   int currentIndex = 0;
 
@@ -126,6 +127,8 @@ class AppCubit extends Cubit<AppState>{
   List<dynamic> favorites = [];
   void postFav(int id){
 
+    emit(AppLoadingFavoritesSuccessState());
+
     favorite[id] = !favorite[id];
 
     dioHelper.postFav(
@@ -144,10 +147,7 @@ class AppCubit extends Cubit<AppState>{
       emit(AppPostFavoritesErrorState());
     });
   }
-
   void getFav(){
-
-
 
     dioHelper.getFav(
         url: 'favorites'
@@ -165,36 +165,12 @@ class AppCubit extends Cubit<AppState>{
       print(error.toString());
     });
   }
-  void deleteFav(int id){
-
-    favorite[id] = !favorite[id];
-
-    dioHelper.postFav(
-        url: 'favorites',
-        data: {
-          'product_id' : id,
-        }
-    ).then((value){
-
-      if(value.data['status'] == true){
-        emit(AppDeleteFavoritesSuccessState());
-      }
-
-      else{
-        emit(AppDeleteFavoritesErrorState());
-      }
-
-
-
-    });
-  }
-
-
-
 
 
   List<dynamic> carts = [];
   void postCart(int id){
+
+    emit(AppLoadingCartSuccessState());
 
     cart[id] = !cart[id];
 
@@ -215,6 +191,7 @@ class AppCubit extends Cubit<AppState>{
     dioHelper.getCart(
         url: 'carts'
     ).then((value){
+      print(cart);
       carts = value.data['data']['cart_items'];
       emit(AppGetCartSuccessState());
     }).catchError((error){
@@ -222,6 +199,7 @@ class AppCubit extends Cubit<AppState>{
       print(error.toString());
     });
   }
+
 
 
 
@@ -244,24 +222,22 @@ class AppCubit extends Cubit<AppState>{
   }
 
 
-  void logOut(token){
-    dioHelper.logOut(
-      url: 'logout',
-      data: {
-        'fcm_token' : token
-      }
+
+  void logOut(context){
+    emit(AppLogoutLoadingState());
+    CacheHelper.removeData(
+      key: 'token',
     ).then((value){
-      if(value.data['status'] == true){
+
+      if(value){
         emit(AppLogoutSuccessState());
-      }
-      else{
-        emit(AppLogoutErrorState());
       }
 
     }).catchError((error){
       emit(AppLogoutErrorState());
     });
   }
+
 
 
 }

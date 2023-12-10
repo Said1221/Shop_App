@@ -61,7 +61,7 @@ class category_products_screen extends StatelessWidget {
                                         ],
                                       ),
                                       SizedBox(
-                                        width: 14,
+                                        width: 5,
                                       ),
 
                                       IconButton(onPressed: (){

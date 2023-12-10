@@ -17,9 +17,7 @@ class favorite_screen extends StatefulWidget {
 }
 
 class _favorite_screenState extends State<favorite_screen> {
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-  BuildContext context;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -31,13 +29,44 @@ class _favorite_screenState extends State<favorite_screen> {
           AppCubit cubit = AppCubit.get(context);
           return Scaffold(
             body: ConditionalBuilder(
-                condition: state is AppGetCategoryProductsSuccessState || state is AppGetFavoritesSuccessState || state is AppGetCartSuccessState,
+                condition: state is! AppLoadingFavoritesSuccessState && state is AppGetFavoritesSuccessState,
                 builder: (context)=>ConditionalBuilder(
                     condition: cubit.favorites.isNotEmpty,
                     builder: (context)=>Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ListView.separated(
-                        itemBuilder: (context , index)=>buildFavorite(cubit.favorites[index] , index),
+                        itemBuilder: (context , index){
+                          return Dismissible(
+                              key: GlobalKey<FormState>(),
+                              child: buildFavorite(cubit.favorites[index] , index),
+                            onDismissed: (direction){
+                              [cubit.favorites[index]].removeAt(index);
+                                setState((){
+                                  cubit.postFav(cubit.favorites[index]['product']['id']);
+                                });
+                            },
+                            background: Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Colors.red,
+                                    Colors.red[400],
+                                    Colors.red[200],
+                                  ]
+                                )
+                              ),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text('Delete' , style: TextStyle(fontSize: 30 , color: Colors.white , fontStyle: FontStyle.italic),),
+                                  Icon(Icons.delete , color: Colors.white,),
+                                ],
+                              ),
+                            ),
+                            )
+                          );
+                        },
                         separatorBuilder: (context , index)=>myDivider(),
                         itemCount: cubit.favorites.length,
                       ),
@@ -80,13 +109,8 @@ class _favorite_screenState extends State<favorite_screen> {
            ),
           ),
 
-          IconButton(onPressed: (){
-            setState((){
-              AppCubit().deleteFav(list['product']['id']);
-            });
-
-          },
-              icon:Icon(Icons.delete , color: Colors.red,)
+          IconButton(onPressed: (){},
+              icon:Icon(Icons.swap_horiz , color: Colors.red,)
           ),
         ],
       ),

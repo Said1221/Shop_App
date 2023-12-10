@@ -37,6 +37,7 @@ class AppLoginCubit extends Cubit<AppLoginState>{
         CacheHelper.saveData(key: 'email', value: model.data.email);
         CacheHelper.saveData(key: 'phone', value: model.data.phone);
         CacheHelper.saveData(key: 'token', value: model.data.token);
+        print(CacheHelper.getData(key: 'token'));
         emit(AppLoginSuccessState());
       }
 
